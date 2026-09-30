@@ -428,6 +428,7 @@ body[data-view="book"]{--bg:var(--bg-book)}
     <button data-go="resume">Resume</button>
     <button data-go="stats">Progress</button>
   </nav>
+  <button class="theme-btn" id="sound-btn" aria-label="เปิดหรือปิดเสียงดนตรี"></button>
   <button class="theme-btn" id="theme-btn" aria-label="สลับธีมมืดสว่าง"></button>
 </div></div>
 
@@ -963,7 +964,7 @@ body[data-view="book"]{--bg:var(--bg-book)}
 
 <script>
 (function(){
-  var KEY='mylog.v3', TKEY='mylog.theme', SKEY='mylog.hbsize';
+  var KEY='mylog.v3', TKEY='mylog.theme', SKEY='mylog.hbsize', MKEY='mylog.music';
   var TH_M=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
   var TH_MS=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
   var TH_D=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
@@ -1120,6 +1121,75 @@ body[data-view="book"]{--bg:var(--bg-book)}
     document.documentElement.setAttribute('data-theme',next);
     try{localStorage.setItem(TKEY,next);}catch(e){}
     paintThemeBtn();
+  };
+
+  /* ---- เสียงดนตรีที่สร้างจากโค้ด ---- */
+  var AC=null, musicOn=false, padGain=null, noteTimer=null;
+  var SCALE=[261.63,293.66,329.63,392.00,440.00,523.25,587.33,659.25];
+  function ctx(){
+    if(!AC){
+      var C=window.AudioContext||window.webkitAudioContext;
+      if(!C)return null;
+      AC=new C();
+    }
+    if(AC.state==='suspended')AC.resume();
+    return AC;
+  }
+  function bell(freq,vol,dur){
+    var c=ctx(); if(!c)return;
+    var o=c.createOscillator(), g=c.createGain(), f=c.createBiquadFilter();
+    o.type='sine'; o.frequency.value=freq;
+    f.type='lowpass'; f.frequency.value=2200;
+    g.gain.setValueAtTime(0,c.currentTime);
+    g.gain.linearRampToValueAtTime(vol,c.currentTime+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+dur);
+    o.connect(f); f.connect(g); g.connect(c.destination);
+    o.start(); o.stop(c.currentTime+dur+0.05);
+  }
+  function chime(){ bell(659.25,0.10,0.5); setTimeout(function(){bell(880,0.07,0.6);},110); }
+  function startPad(){
+    var c=ctx(); if(!c)return;
+    padGain=c.createGain(); padGain.gain.value=0;
+    padGain.gain.linearRampToValueAtTime(0.045,c.currentTime+2);
+    var f=c.createBiquadFilter(); f.type='lowpass'; f.frequency.value=700;
+    padGain.connect(f); f.connect(c.destination);
+    [130.81,196.00,261.63].forEach(function(fr,i){
+      var o=c.createOscillator(); o.type='triangle';
+      o.frequency.value=fr*(i===1?1.003:1);
+      o.connect(padGain); o.start();
+      padGain['osc'+i]=o;
+    });
+    function nextNote(){
+      if(!musicOn)return;
+      bell(SCALE[Math.floor(Math.random()*SCALE.length)],0.055,1.8);
+      noteTimer=setTimeout(nextNote,2600+Math.random()*3200);
+    }
+    noteTimer=setTimeout(nextNote,1200);
+  }
+  function stopPad(){
+    if(noteTimer){clearTimeout(noteTimer);noteTimer=null;}
+    if(padGain&&AC){
+      var t=AC.currentTime;
+      padGain.gain.cancelScheduledValues(t);
+      padGain.gain.setValueAtTime(padGain.gain.value,t);
+      padGain.gain.linearRampToValueAtTime(0.0001,t+1.2);
+      var p=padGain;
+      setTimeout(function(){[0,1,2].forEach(function(i){try{p['osc'+i].stop();}catch(e){}});},1400);
+      padGain=null;
+    }
+  }
+  function soundIcon(on){
+    return on
+      ? '<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 9h3l5-4v14l-5-4H5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+      : '<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 9h3l5-4v14l-5-4H5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M17 10l4 4M21 10l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  }
+  function paintSound(){ $('sound-btn').innerHTML=soundIcon(musicOn); }
+  paintSound();
+  $('sound-btn').onclick=function(){
+    musicOn=!musicOn; paintSound();
+    try{localStorage.setItem(MKEY,musicOn?'1':'0');}catch(e){}
+    if(musicOn){startPad();toast(HEART_SVG,'เปิดเสียงคลอแล้ว','กดปุ่มเดิมเพื่อปิด',4200);}
+    else{stopPad();}
   };
 
   function seed(){
@@ -1332,6 +1402,7 @@ body[data-view="book"]{--bg:var(--bg-book)}
       if(pendingIdea){db.ideas.forEach(function(i){if(i.id===pendingIdea)i.done=true;});}
     }
     save(); closeForm(); renderLog(); renderCal(); renderNudge();
+    if(musicOn)chime();
     if(wasEdit){toast(LEAF_SVG,'แก้ไขเรียบร้อย','');}
     else{
       var n=streak();
