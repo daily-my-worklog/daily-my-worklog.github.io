@@ -405,6 +405,45 @@ body[data-view="book"]{--bg:var(--bg-book)}
 .stickers{display:flex;justify-content:center;gap:16px;align-items:flex-end;margin-top:18px;opacity:.85}
 .stickers svg{flex:none}
 
+/* เรซูเม่ */
+.rmode{display:flex;gap:6px;margin-bottom:16px}
+.rmode button{font-family:var(--font-round);font-weight:600;font-size:14px;border:1.5px solid var(--line);
+  background:transparent;color:var(--ink-soft);border-radius:11px;padding:6px 16px;cursor:pointer}
+.rmode button[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:#fff}
+.rowset{border:1.5px solid var(--line);border-radius:13px;padding:14px;margin-bottom:10px}
+.rowset .f2{margin-bottom:10px}
+.addrow{width:100%}
+.sheet{background:#fff;color:#2b2b2b;border:1.5px solid var(--line);border-radius:14px;
+  padding:42px 46px;box-shadow:var(--shadow);max-width:820px;margin:0 auto;font-size:14px;line-height:1.7}
+@media (max-width:560px){.sheet{padding:26px 22px}}
+.sheet h1{font-family:var(--font-round);font-weight:700;font-size:30px;color:#1f1f1f;line-height:1.3}
+.sheet .role{font-size:15px;color:#555;margin-top:2px}
+.sheet .contact{font-size:13px;color:#555;margin-top:8px;display:flex;gap:14px;flex-wrap:wrap}
+.sheet h2{font-family:var(--font-round);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;
+  color:#3c5a35;border-bottom:2px solid #d8e2d3;padding-bottom:5px;margin:26px 0 12px}
+.sheet .item{margin-bottom:14px}
+.sheet .item .top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sheet .item b{font-size:14.5px;color:#1f1f1f}
+.sheet .item .when{font-size:13px;color:#666;white-space:nowrap}
+.sheet .item .org{font-size:13.5px;color:#555}
+.sheet .item p{margin:5px 0 0;color:#333;white-space:pre-wrap}
+.sheet ul{margin:5px 0 0;padding-left:20px}
+.sheet li{margin-bottom:4px}
+.sheet .tagline2{display:flex;flex-wrap:wrap;gap:6px}
+.sheet .tagline2 span{background:#eef3ea;color:#3c5a35;border-radius:99px;padding:2px 11px;font-size:12.5px}
+.sheet .empty-note{color:#888;font-size:13px}
+.extract{background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:14px;
+  max-height:260px;overflow:auto;white-space:pre-wrap;font-size:13px;line-height:1.7;margin-top:10px}
+
+@media print{
+  .bar,.pagehead,.stickers,#toaster,.rmode,.no-print,.foot{display:none!important}
+  body{background:#fff!important}
+  .wrap{padding:0!important;max-width:none}
+  section:not(#v-resume){display:none!important}
+  .panel{border:none;box-shadow:none;padding:0;background:#fff}
+  .sheet{border:none;box-shadow:none;padding:0;max-width:none}
+}
+
 :focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 </style>
 </head>
@@ -871,29 +910,80 @@ body[data-view="book"]{--bg:var(--bg-book)}
 </section>
 
 <section id="v-resume" hidden>
-  <div class="pagehead ph-resume"><div class="ph-t"><button class="back" data-go="home">← Home</button><h2>Resume</h2><p class="th">ร่างเรซูเม่</p></div><svg class="ph-art" viewBox="0 0 150 90" fill="none" aria-hidden="true">
-<rect x="26" y="10" width="76" height="72" rx="8" fill="var(--card)" stroke="currentColor" stroke-width="2.6"/>
-<circle cx="48" cy="32" r="9" stroke="currentColor" stroke-width="2.4"/>
-<path d="M66 27h22M66 38h22M38 54h52M38 66h34" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" opacity=".65"/>
-<path d="M112 26 v30 a10 10 0 0 0 20 0 v-34 a15 15 0 0 0 -30 0 v38" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
-<path d="M22 76 q-8-5-8-10.5 a4 4 0 0 1 8-1.8 a4 4 0 0 1 8 1.8 q0 5.5-8 10.5z" fill="currentColor" opacity=".45"/>
-</svg></div>
-  <div class="panel">
-    <p class="hint" style="margin:0 0 14px">รวบรวมจากบันทึกโดยอัตโนมัติ จัดกลุ่มตามประเภทงาน ไม่ต้องกรอกซ้ำ</p>
-    <div class="toolbar">
-      <div style="flex:1;min-width:190px">
-        <label for="r-range">ช่วงเวลา</label>
+  <div class="pagehead ph-resume"><div class="ph-t">
+    <button class="back" data-go="home">← Home</button>
+    <h2>Resume</h2><p class="th">ร่างเรซูเม่</p></div>
+    <svg class="ph-art" viewBox="0 0 150 90" fill="none" aria-hidden="true">
+      <rect x="26" y="10" width="76" height="72" rx="8" fill="var(--card)" stroke="currentColor" stroke-width="2.6"/>
+      <circle cx="48" cy="32" r="9" stroke="currentColor" stroke-width="2.4"/>
+      <path d="M66 27h22M66 38h22M38 54h52M38 66h34" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" opacity=".65"/>
+      <path d="M112 26 v30 a10 10 0 0 0 20 0 v-34 a15 15 0 0 0 -30 0 v38" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M22 76 q-8-5-8-10.5 a4 4 0 0 1 8-1.8 a4 4 0 0 1 8 1.8 q0 5.5-8 10.5z" fill="currentColor" opacity=".45"/>
+    </svg>
+  </div>
+
+  <div class="rmode">
+    <button id="rm-edit" aria-pressed="true">แก้ไขข้อมูล</button>
+    <button id="rm-view" aria-pressed="false">ดูตัวอย่างเรซูเม่</button>
+  </div>
+
+  <div id="r-editor">
+    <div class="panel">
+      <h3>มีเรซูเม่เดิมอยู่แล้ว</h3>
+      <p class="hint" style="margin:0 0 12px">แนบไฟล์ PDF หรือ TXT แล้วระบบจะดึงข้อความออกมาให้ คัดลอกไปวางในช่องด้านล่างได้เลย ระบบจะไม่เดาให้เอง เพราะเรซูเม่ผิดคือเสียโอกาสงาน</p>
+      <input id="r-file2" type="file" accept=".pdf,.txt,application/pdf,text/plain">
+      <div class="row" style="margin-top:10px"><button class="btn ghost" id="r-copytext" hidden>คัดลอกข้อความทั้งหมด</button></div>
+      <div class="extract" id="r-extract" hidden></div>
+    </div>
+
+    <div class="panel">
+      <h3>ข้อมูลส่วนตัว</h3>
+      <div class="f2">
+        <div><label for="p-name">ชื่อ-นามสกุล</label><input id="p-name" maxlength="80" placeholder="นพวรรณ โลหะศิริกุล"></div>
+        <div><label for="p-role">ตำแหน่งที่สนใจ</label><input id="p-role" maxlength="80" placeholder="เจ้าหน้าที่บัญชี"></div>
+      </div>
+      <div class="f2">
+        <div><label for="p-email">อีเมล</label><input id="p-email" maxlength="80" placeholder="name@email.com"></div>
+        <div><label for="p-phone">เบอร์โทร</label><input id="p-phone" maxlength="40" placeholder="08x-xxx-xxxx"></div>
+      </div>
+      <div><label for="p-loc">ที่อยู่โดยย่อ</label><input id="p-loc" maxlength="80" placeholder="กรุงเทพฯ"></div>
+      <div style="margin-top:12px"><label for="p-sum">แนะนำตัวสั้นๆ</label>
+        <textarea id="p-sum" maxlength="600" placeholder="บัณฑิตบัญชี สนใจงานบัญชีทั่วไปและภาษี มีประสบการณ์ฝึกงานด้าน AP AR และการยื่นภาษี"></textarea>
+        <div class="hint">2-4 บรรทัดพอ เขียนว่าคุณเป็นใครและอยากทำงานอะไร</div></div>
+      <div class="row" style="margin-top:12px"><button class="btn" id="p-save">บันทึกข้อมูล</button></div>
+    </div>
+
+    <div class="panel">
+      <h3>การศึกษา</h3>
+      <div id="edu-list"></div>
+      <button class="btn ghost addrow" id="edu-add">+ เพิ่มการศึกษา</button>
+    </div>
+
+    <div class="panel">
+      <h3>ประสบการณ์เดิม เช่น ฝึกงาน</h3>
+      <div id="exp-list"></div>
+      <button class="btn ghost addrow" id="exp-add">+ เพิ่มประสบการณ์</button>
+    </div>
+
+    <div class="panel">
+      <h3>บันทึกที่จะดึงมาใส่</h3>
+      <div><label for="r-range">ช่วงเวลา</label>
         <select id="r-range">
           <option value="3">3 เดือนล่าสุด</option>
           <option value="6" selected>6 เดือนล่าสุด</option>
           <option value="12">12 เดือนล่าสุด</option>
           <option value="0">ทั้งหมด</option>
         </select>
-      </div>
+        <div class="hint">บันทึกจากหน้า Work Log จะถูกจัดเป็นไทม์ไลน์ต่อจากประสบการณ์เดิม</div></div>
     </div>
-    <div class="row"><button class="btn" id="gen">สร้างร่าง</button>
-      <button class="btn ghost" id="copy-draft">คัดลอกร่าง</button></div>
-    <pre id="draft" hidden></pre>
+  </div>
+
+  <div id="r-preview" hidden>
+    <div class="row no-print" style="margin-bottom:14px">
+      <button class="btn" id="r-print">พิมพ์หรือบันทึกเป็น PDF</button>
+      <button class="btn ghost" id="copy-draft">คัดลอกเป็นข้อความ</button>
+    </div>
+    <div class="sheet" id="sheet"></div>
   </div>
 
   <div class="stickers"><svg width="36" height="44" viewBox="0 0 36 46" fill="none" aria-hidden="true"><path d="M10 12 v22 a8 8 0 0 0 16 0 v-24 a12 12 0 0 0 -24 0 v26" stroke="var(--sk-line)" stroke-width="2.6" stroke-linecap="round"/></svg><svg width="40" height="40" viewBox="0 0 46 46" fill="none" aria-hidden="true"><path d="M23 40 q-16-10 -16-21 a8 8 0 0 1 16-3.5 a8 8 0 0 1 16 3.5 q0 11-16 21z" fill="var(--sk-pink)" stroke="var(--sk-line)" stroke-width="2"/></svg><svg width="42" height="42" viewBox="0 0 44 44" fill="none" aria-hidden="true"><path d="M30 6 l8 8 -22 22 -11 3 3-11z" fill="var(--sk-book2)" stroke="var(--sk-line)" stroke-width="2.2" stroke-linejoin="round"/><path d="M26 10 l8 8" stroke="var(--sk-line)" stroke-width="2.2"/></svg></div>
@@ -1219,6 +1309,8 @@ body[data-view="book"]{--bg:var(--bg-book)}
 
   var db=load()||seed();
   if(!db.entries)db.entries=[]; if(!db.ideas)db.ideas=[]; if(!db.goals)db.goals=[]; if(!db.notes)db.notes=[]; if(!db.books)db.books=[];
+  if(!db.profile)db.profile={name:'',role:'',email:'',phone:'',loc:'',summary:'',edu:[],exp:[]};
+  if(!db.profile.edu)db.profile.edu=[]; if(!db.profile.exp)db.profile.exp=[];
   var view=new Date();
   var filter={q:'',cat:'',date:''};
   var editId=null, editGoalId=null, pendingIdea=null, shown=PAGE;
@@ -1251,6 +1343,7 @@ body[data-view="book"]{--bg:var(--bg-book)}
     if(name==='stats')renderStats();
     if(name==='notes'){renderMoods();renderNotes();spinRibbon();}
     if(name==='book')renderBooks();
+    if(name==='resume')renderResume();
     pageHello(name);
   }
   document.addEventListener('click',function(e){
@@ -1913,40 +2006,247 @@ body[data-view="book"]{--bg:var(--bg-book)}
   }
 
   /* ---- Resume ---- */
-  function draftText(){
+  function rangedEntries(){
     var months=parseInt($('r-range').value,10);
     var list=db.entries.slice();
     if(months){
       var cut=new Date(); cut.setMonth(cut.getMonth()-months);
-      var ck=key(cut);
-      list=list.filter(function(e){return e.date>=ck;});
+      var ck=key(cut); list=list.filter(function(e){return e.date>=ck;});
     }
-    if(!list.length)return 'ยังไม่มีบันทึกในช่วงเวลาที่เลือก';
-    var byCat={};
-    list.sort(function(a,b){return a.date<b.date?1:-1;}).forEach(function(e){(byCat[e.cat]=byCat[e.cat]||[]).push(e);});
-    var txt='';
-    Object.keys(byCat).forEach(function(c){
-      txt+='['+c+']\n';
-      byCat[c].forEach(function(e){
-        txt+='• '+e.title;
-        if(e.result)txt+=' — '+e.result;
-        if(e.skills&&e.skills.length)txt+=' ('+e.skills.join(', ')+')';
-        txt+='\n';
-      });
-      txt+='\n';
-    });
-    return txt.trim();
+    return list.sort(function(a,b){return a.date<b.date?1:-1;});
   }
-  $('gen').onclick=function(){
-    var o=$('draft'); o.textContent=draftText(); o.hidden=false;
-    toast(STAR_SVG,'สร้างร่างให้แล้ว','เอาไปเรียบเรียงต่อได้เลย');
+  function loadProfile(){
+    var p=db.profile;
+    $('p-name').value=p.name||''; $('p-role').value=p.role||'';
+    $('p-email').value=p.email||''; $('p-phone').value=p.phone||'';
+    $('p-loc').value=p.loc||''; $('p-sum').value=p.summary||'';
+    if(p.range)$('r-range').value=p.range;
+  }
+  $('p-save').onclick=function(){
+    var p=db.profile;
+    p.name=$('p-name').value.trim(); p.role=$('p-role').value.trim();
+    p.email=$('p-email').value.trim(); p.phone=$('p-phone').value.trim();
+    p.loc=$('p-loc').value.trim(); p.summary=$('p-sum').value.trim();
+    save(); toast(DOC_SVG,'บันทึกข้อมูลแล้ว','กดดูตัวอย่างเรซูเม่ได้เลย');
   };
-  $('r-range').onchange=function(){var o=$('draft');if(!o.hidden)o.textContent=draftText();};
+  $('r-range').onchange=function(){ db.profile.range=this.value; save(); };
+
+  function rowSet(kind){
+    var arr=db.profile[kind], box=$(kind+'-list');
+    box.textContent='';
+    if(!arr.length){
+      var e=document.createElement('p'); e.className='hint';
+      e.textContent=kind==='edu'?'ยังไม่มีข้อมูลการศึกษา':'ยังไม่มีประสบการณ์เดิม เช่น ฝึกงานหรืองานพาร์ทไทม์';
+      box.appendChild(e);
+    }
+    arr.forEach(function(r,idx){
+      var w=document.createElement('div'); w.className='rowset';
+      function field(lab,k,ph,long){
+        var d=document.createElement('div');
+        var l=document.createElement('label'); l.textContent=lab; d.appendChild(l);
+        var i=document.createElement(long?'textarea':'input');
+        i.value=r[k]||''; i.placeholder=ph;
+        if(long)i.style.minHeight='70px';
+        i.oninput=function(){r[k]=i.value;save();};
+        d.appendChild(i); return d;
+      }
+      var g=document.createElement('div'); g.className='f2';
+      if(kind==='edu'){
+        g.appendChild(field('สถาบัน','org','มหาวิทยาลัยศรีปทุม'));
+        g.appendChild(field('ช่วงเวลา','when','2563 - 2567'));
+        w.appendChild(g);
+        w.appendChild(field('วุฒิและสาขา','role','บัญชีบัณฑิต สาขาการบัญชี'));
+        w.appendChild(field('รายละเอียดเพิ่มเติม','detail','เกียรตินิยมอันดับหนึ่ง เกรดเฉลี่ย 3.79',true));
+      }else{
+        g.appendChild(field('องค์กร','org','บริษัท ตัวอย่าง จำกัด'));
+        g.appendChild(field('ช่วงเวลา','when','มิ.ย. - ก.ย. 2567'));
+        w.appendChild(g);
+        w.appendChild(field('ตำแหน่ง','role','นักศึกษาฝึกงาน ฝ่ายบัญชี'));
+        w.appendChild(field('สิ่งที่ทำ','detail','ดูแลเจ้าหนี้ลูกหนี้ กระทบยอดธนาคาร จัดทำเอกสารภาษี',true));
+      }
+      var x=document.createElement('button'); x.className='del'; x.style.marginTop='8px';
+      armDelete(x,'ลบรายการนี้',function(){arr.splice(idx,1);save();rowSet(kind);});
+      w.appendChild(x);
+      box.appendChild(w);
+    });
+  }
+  $('edu-add').onclick=function(){db.profile.edu.push({org:'',when:'',role:'',detail:''});save();rowSet('edu');};
+  $('exp-add').onclick=function(){db.profile.exp.push({org:'',when:'',role:'',detail:''});save();rowSet('exp');};
+
+  function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
+  function renderSheet(){
+    var p=db.profile, s=$('sheet'); s.textContent='';
+    s.appendChild(el('h1',null,p.name||'ใส่ชื่อของคุณในโหมดแก้ไข'));
+    if(p.role)s.appendChild(el('div','role',p.role));
+    var c=el('div','contact');
+    [p.email,p.phone,p.loc].filter(Boolean).forEach(function(x){c.appendChild(el('span',null,x));});
+    if(c.children.length)s.appendChild(c);
+
+    if(p.summary){ s.appendChild(el('h2',null,'เกี่ยวกับฉัน')); s.appendChild(el('p',null,p.summary)); }
+
+    if(p.exp.length){
+      s.appendChild(el('h2',null,'ประสบการณ์'));
+      p.exp.forEach(function(r){
+        var it=el('div','item'), top=el('div','top');
+        top.appendChild(el('b',null,r.role||'ตำแหน่ง')); top.appendChild(el('span','when',r.when||''));
+        it.appendChild(top);
+        if(r.org)it.appendChild(el('div','org',r.org));
+        if(r.detail)it.appendChild(el('p',null,r.detail));
+        s.appendChild(it);
+      });
+    }
+
+    var list=rangedEntries();
+    if(list.length){
+      s.appendChild(el('h2',null,'ไทม์ไลน์การทำงาน'));
+      var byM={};
+      list.forEach(function(e){var m=e.date.slice(0,7);(byM[m]=byM[m]||[]).push(e);});
+      Object.keys(byM).sort().reverse().forEach(function(m){
+        var d=new Date(+m.slice(0,4),+m.slice(5,7)-1,1);
+        var it=el('div','item'), top=el('div','top');
+        top.appendChild(el('b',null,TH_M[d.getMonth()]+' '+(d.getFullYear()+543)));
+        top.appendChild(el('span','when',byM[m].length+' รายการ'));
+        it.appendChild(top);
+        var ul=el('ul');
+        byM[m].forEach(function(e){
+          var li=el('li',null,e.title+(e.result?(' — '+e.result):''));
+          ul.appendChild(li);
+        });
+        it.appendChild(ul); s.appendChild(it);
+      });
+    }
+
+    if(p.edu.length){
+      s.appendChild(el('h2',null,'การศึกษา'));
+      p.edu.forEach(function(r){
+        var it=el('div','item'), top=el('div','top');
+        top.appendChild(el('b',null,r.role||'วุฒิการศึกษา')); top.appendChild(el('span','when',r.when||''));
+        it.appendChild(top);
+        if(r.org)it.appendChild(el('div','org',r.org));
+        if(r.detail)it.appendChild(el('p',null,r.detail));
+        s.appendChild(it);
+      });
+    }
+
+    var sc={}; list.forEach(function(e){(e.skills||[]).forEach(function(k){sc[k]=(sc[k]||0)+1;});});
+    var keys=Object.keys(sc).sort(function(a,b){return sc[b]-sc[a];});
+    if(keys.length){
+      s.appendChild(el('h2',null,'ทักษะและเครื่องมือ'));
+      var t=el('div','tagline2');
+      keys.forEach(function(k){t.appendChild(el('span',null,k));});
+      s.appendChild(t);
+    }
+    if(!p.name&&!p.exp.length&&!list.length){
+      s.appendChild(el('p','empty-note','ยังไม่มีข้อมูล กดแก้ไขข้อมูลเพื่อกรอก แล้วกลับมาดูใหม่'));
+    }
+  }
+  function renderResume(){ loadProfile(); rowSet('edu'); rowSet('exp'); renderSheet(); }
+  function setMode(view){
+    $('r-editor').hidden=view; $('r-preview').hidden=!view;
+    $('rm-edit').setAttribute('aria-pressed',view?'false':'true');
+    $('rm-view').setAttribute('aria-pressed',view?'true':'false');
+    if(view)renderSheet();
+  }
+  $('rm-edit').onclick=function(){setMode(false);};
+  $('rm-view').onclick=function(){setMode(true);};
+  $('r-print').onclick=function(){
+    try{ window.print(); }catch(e){}
+    toast(DOC_SVG,'เปิดหน้าต่างพิมพ์แล้ว','เลือกปลายทางเป็น Save as PDF ได้');
+  };
+
+  function draftText(){
+    var p=db.profile, out=[];
+    if(p.name)out.push(p.name+(p.role?(' — '+p.role):''));
+    var cc=[p.email,p.phone,p.loc].filter(Boolean).join(' · '); if(cc)out.push(cc);
+    if(p.summary)out.push('\n[เกี่ยวกับฉัน]\n'+p.summary);
+    if(p.exp.length){
+      out.push('\n[ประสบการณ์]');
+      p.exp.forEach(function(r){
+        out.push('• '+(r.role||'')+(r.org?(' · '+r.org):'')+(r.when?(' · '+r.when):''));
+        if(r.detail)out.push('  '+r.detail);
+      });
+    }
+    var list=rangedEntries();
+    if(list.length){
+      out.push('\n[ไทม์ไลน์การทำงาน]');
+      var byM={}; list.forEach(function(e){var m=e.date.slice(0,7);(byM[m]=byM[m]||[]).push(e);});
+      Object.keys(byM).sort().reverse().forEach(function(m){
+        var d=new Date(+m.slice(0,4),+m.slice(5,7)-1,1);
+        out.push(TH_M[d.getMonth()]+' '+(d.getFullYear()+543));
+        byM[m].forEach(function(e){out.push('• '+e.title+(e.result?(' — '+e.result):''));});
+      });
+    }
+    if(p.edu.length){
+      out.push('\n[การศึกษา]');
+      p.edu.forEach(function(r){
+        out.push('• '+(r.role||'')+(r.org?(' · '+r.org):'')+(r.when?(' · '+r.when):''));
+        if(r.detail)out.push('  '+r.detail);
+      });
+    }
+    var sc={}; list.forEach(function(e){(e.skills||[]).forEach(function(k){sc[k]=1;});});
+    var ks=Object.keys(sc);
+    if(ks.length)out.push('\n[ทักษะและเครื่องมือ]\n'+ks.join(', '));
+    return out.join('\n').trim()||'ยังไม่มีข้อมูล';
+  }
   function copyTo(btn,text,label){
     function done(ok){btn.textContent=ok?'คัดลอกแล้ว':'คัดลอกไม่สำเร็จ';setTimeout(function(){btn.textContent=label;},1800);}
     try{navigator.clipboard.writeText(text).then(function(){done(true);},function(){done(false);});}catch(e){done(false);}
   }
-  $('copy-draft').onclick=function(){copyTo(this,draftText(),'คัดลอกร่าง');};
+  $('copy-draft').onclick=function(){copyTo(this,draftText(),'คัดลอกเป็นข้อความ');};
+
+  /* ดึงข้อความจากไฟล์ที่แนบ */
+  var pdfLoading=null;
+  function loadPdfJs(){
+    if(window.pdfjsLib)return Promise.resolve(window.pdfjsLib);
+    if(pdfLoading)return pdfLoading;
+    pdfLoading=new Promise(function(res,rej){
+      var s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      s.onload=function(){
+        try{ window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; }catch(e){}
+        res(window.pdfjsLib);
+      };
+      s.onerror=function(){rej(new Error('load fail'));};
+      document.head.appendChild(s);
+    });
+    return pdfLoading;
+  }
+  function showExtract(text){
+    var box=$('r-extract');
+    box.textContent=text; box.hidden=false;
+    $('r-copytext').hidden=false;
+    $('r-copytext').onclick=function(){copyTo(this,text,'คัดลอกข้อความทั้งหมด');};
+  }
+  $('r-file2').onchange=function(){
+    var f=this.files&&this.files[0]; if(!f)return;
+    if(/\.txt$/i.test(f.name)||f.type==='text/plain'){
+      var fr=new FileReader();
+      fr.onload=function(){showExtract(String(fr.result));};
+      fr.readAsText(f); return;
+    }
+    showExtract('กำลังอ่านไฟล์…');
+    loadPdfJs().then(function(lib){
+      return f.arrayBuffer().then(function(buf){
+        return lib.getDocument({data:buf}).promise;
+      });
+    }).then(function(doc){
+      var jobs=[];
+      for(var i=1;i<=doc.numPages;i++){
+        jobs.push(doc.getPage(i).then(function(pg){
+          return pg.getTextContent().then(function(tc){
+            return tc.items.map(function(it){return it.str;}).join(' ');
+          });
+        }));
+      }
+      return Promise.all(jobs);
+    }).then(function(pages){
+      var txt=pages.join('\n\n').replace(/[ \t]{2,}/g,' ').trim();
+      showExtract(txt||'ไฟล์นี้ไม่มีข้อความให้ดึง อาจเป็น PDF ที่สร้างจากรูปภาพ ต้องพิมพ์เอง');
+      toast(DOC_SVG,'ดึงข้อความเรียบร้อย','คัดลอกไปวางในช่องด้านล่างได้เลย');
+    }).catch(function(){
+      showExtract('อ่านไฟล์นี้ไม่สำเร็จ ลองเปิด PDF แล้วคัดลอกข้อความมาวางเองได้');
+    });
+  };
 
   /* ---- Backup ---- */
   $('copy').onclick=function(){copyTo(this,JSON.stringify(db),'คัดลอกข้อมูลทั้งหมด');};
@@ -1973,7 +2273,8 @@ body[data-view="book"]{--bg:var(--bg-book)}
     try{
       var o=JSON.parse(text);
       if(!o||!Array.isArray(o.entries))throw 0;
-      db={entries:o.entries,ideas:Array.isArray(o.ideas)?o.ideas:[],goals:Array.isArray(o.goals)?o.goals:[],notes:Array.isArray(o.notes)?o.notes:[],books:Array.isArray(o.books)?o.books:[]};
+      db={entries:o.entries,ideas:Array.isArray(o.ideas)?o.ideas:[],goals:Array.isArray(o.goals)?o.goals:[],notes:Array.isArray(o.notes)?o.notes:[],books:Array.isArray(o.books)?o.books:[],profile:o.profile||{name:'',role:'',email:'',phone:'',loc:'',summary:'',edu:[],exp:[]}};
+      if(!db.profile.edu)db.profile.edu=[]; if(!db.profile.exp)db.profile.exp=[];
       save(); $('r-text').value=''; $('r-file').value=''; e.hidden=true; shown=PAGE;
       renderCal();renderLog();renderIdeas();renderGoals();renderSkills();renderStats();renderNudge();
       go('log'); toast(HEART_SVG,'กู้คืนข้อมูลเรียบร้อย','');
@@ -1991,7 +2292,7 @@ body[data-view="book"]{--bg:var(--bg-book)}
 
   go((location.hash||'').slice(1)||'home');
   renderCal(); renderLog(); renderIdeas(); renderGoals(); renderSkills(); renderStats(); renderNudge();
-  renderMoods(); renderNotes(); renderBooks();
+  renderMoods(); renderNotes(); renderBooks(); renderResume();
 
 })();
 </script>
