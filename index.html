@@ -1123,47 +1123,69 @@ body[data-view="book"]{--bg:var(--bg-book)}
     paintThemeBtn();
   };
 
-  /* ---- เสียงดนตรีที่สร้างจากโค้ด ---- */
-  var AC=null, musicOn=false, padGain=null, noteTimer=null;
-  var SCALE=[261.63,293.66,329.63,392.00,440.00,523.25,587.33,659.25];
+  /* ---- เปียโนที่เล่นเป็นเพลง สร้างจากโค้ด ---- */
+  var AC=null, musicOn=false, barTimer=null, master=null, bar=0;
   function ctx(){
     if(!AC){
       var C=window.AudioContext||window.webkitAudioContext;
       if(!C)return null;
       AC=new C();
+      master=AC.createGain(); master.gain.value=0.9;
+      var comp=AC.createDynamicsCompressor();
+      master.connect(comp); comp.connect(AC.destination);
     }
     if(AC.state==='suspended')AC.resume();
     return AC;
   }
-  function bell(freq,vol,dur){
+  /* เสียงเปียโนสังเคราะห์จากคลื่นไซน์ซ้อนกัน 3 ชั้น */
+  function piano(freq,vel,dur,when){
     var c=ctx(); if(!c)return;
-    var o=c.createOscillator(), g=c.createGain(), f=c.createBiquadFilter();
-    o.type='sine'; o.frequency.value=freq;
-    f.type='lowpass'; f.frequency.value=1600;
-    g.gain.setValueAtTime(0,c.currentTime);
-    g.gain.linearRampToValueAtTime(vol,c.currentTime+0.02);
-    g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+dur);
-    o.connect(f); f.connect(g); g.connect(c.destination);
-    o.start(); o.stop(c.currentTime+dur+0.05);
+    var t=(when||c.currentTime), out=c.createGain();
+    out.gain.value=vel;
+    var f=c.createBiquadFilter(); f.type='lowpass';
+    f.frequency.setValueAtTime(3200,t);
+    f.frequency.exponentialRampToValueAtTime(900,t+dur*0.7);
+    out.connect(f); f.connect(master);
+    [[1,1],[2,0.32],[3,0.12],[4.01,0.05]].forEach(function(p){
+      var o=c.createOscillator(), g=c.createGain();
+      o.type='sine'; o.frequency.value=freq*p[0];
+      var d=dur*(p[0]===1?1:0.55);
+      g.gain.setValueAtTime(0,t);
+      g.gain.linearRampToValueAtTime(p[1],t+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+      o.connect(g); g.connect(out);
+      o.start(t); o.stop(t+d+0.05);
+    });
   }
-  function chime(){ bell(659.25,0.10,0.5); setTimeout(function(){bell(880,0.07,0.6);},110); }
-  function startPad(){
-    if(!ctx())return;
-    function nextNote(){
-      if(!musicOn)return;
-      var i=Math.floor(Math.random()*SCALE.length);
-      bell(SCALE[i],0.05,2.4);
-      if(Math.random()<0.45){
-        var j=Math.min(SCALE.length-1,i+(Math.random()<0.5?2:3));
-        setTimeout(function(){ if(musicOn)bell(SCALE[j],0.035,2.2); },520+Math.random()*420);
+  function chime(){
+    var c=ctx(); if(!c)return;
+    piano(659.25,0.16,1.1); piano(987.77,0.11,1.3,c.currentTime+0.09);
+  }
+  /* คอร์ด C - G/B - Am - F  วนไป ทำนองอยู่ในบันไดเสียง C เมเจอร์ */
+  var CHORDS=[
+    {bass:[130.81,196.00,261.63,329.63], mel:[523.25,587.33,659.25,783.99]},
+    {bass:[123.47,196.00,246.94,293.66], mel:[493.88,587.33,659.25,739.99]},
+    {bass:[110.00,164.81,220.00,329.63], mel:[523.25,659.25,440.00,493.88]},
+    {bass:[174.61,261.63,349.23,440.00], mel:[440.00,523.25,349.23,587.33]}
+  ];
+  var BEAT=0.62;
+  function playBar(){
+    if(!musicOn)return;
+    var c=ctx(); if(!c)return;
+    var ch=CHORDS[bar%CHORDS.length], t0=c.currentTime+0.06;
+    ch.bass.forEach(function(f,i){ piano(f,0.20-i*0.02,2.6,t0+i*BEAT); });
+    for(var k=0;k<4;k++){
+      if(Math.random()<0.62){
+        var n=ch.mel[Math.floor(Math.random()*ch.mel.length)];
+        if(Math.random()<0.25)n=n*2;
+        piano(n,0.09+Math.random()*0.04,2.2,t0+k*BEAT+(Math.random()*0.06));
       }
-      noteTimer=setTimeout(nextNote,4200+Math.random()*4200);
     }
-    noteTimer=setTimeout(nextNote,600);
+    bar++;
+    barTimer=setTimeout(playBar,BEAT*4*1000);
   }
-  function stopPad(){
-    if(noteTimer){clearTimeout(noteTimer);noteTimer=null;}
-  }
+  function startPad(){ if(!ctx())return; bar=0; playBar(); }
+  function stopPad(){ if(barTimer){clearTimeout(barTimer);barTimer=null;} }
   function soundIcon(on){
     return on
       ? '<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 9h3l5-4v14l-5-4H5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
@@ -1174,7 +1196,7 @@ body[data-view="book"]{--bg:var(--bg-book)}
   $('sound-btn').onclick=function(){
     musicOn=!musicOn; paintSound();
     try{localStorage.setItem(MKEY,musicOn?'1':'0');}catch(e){}
-    if(musicOn){startPad();toast(HEART_SVG,'เปิดเสียงแล้ว','เสียงระฆังเบาๆ เป็นระยะ',4200);}
+    if(musicOn){startPad();toast(HEART_SVG,'เปิดเปียโนแล้ว','กดปุ่มเดิมเพื่อปิด',4200);}
     else{stopPad();}
   };
 
