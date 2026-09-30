@@ -1,53 +1,613 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>เว็บแรกของฉัน</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>my log</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mali:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+/* Layout: หน้าแรกเป็นเมนูการ์ด กดแล้วสลับไปหน้าย่อยในไฟล์เดียว */
+:root{
+  --bg:#F8F6F0; --card:#FFFFFF; --ink:#41473D; --ink-soft:#8B9184;
+  --primary:#6E8C63; --primary-deep:#50704A; --primary-soft:#E6EEE1;
+  --line:#E7E4D8; --shadow:0 2px 0 rgba(80,112,74,.06);
+  --c-green:#E6EEE1; --c-pink:#FBE8E8; --c-blue:#E3EBF5; --c-yellow:#FAF0D9; --c-purple:#EBE7F4; --c-peach:#F7E9DD;
+  --t-green:#4E6B46; --t-pink:#9C5C5C; --t-blue:#456087; --t-yellow:#8A6C28; --t-purple:#61558C; --t-peach:#8E6446;
+  --font-display:'Mali','Trebuchet MS',cursive;
+  --font-body:'IBM Plex Sans Thai','Segoe UI',sans-serif;
+  --r:18px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#23281F; --card:#2E3429; --ink:#EAEEE4; --ink-soft:#A3AB9A;
+  --primary:#9FBD93; --primary-deep:#BCD3B0; --primary-soft:#39412F;
+  --line:#414938; --shadow:0 2px 0 rgba(0,0,0,.16);
+  --c-green:#37422F; --c-pink:#453232; --c-blue:#2F3A47; --c-yellow:#453D28; --c-purple:#3A3548; --c-peach:#453A2F;
+  --t-green:#B6CFA9; --t-pink:#E4B2B2; --t-blue:#A9C4E4; --t-yellow:#E0C481; --t-purple:#BDB2E0; --t-peach:#DDB694;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#23281F; --card:#2E3429; --ink:#EAEEE4; --ink-soft:#A3AB9A;
+  --primary:#9FBD93; --primary-deep:#BCD3B0; --primary-soft:#39412F;
+  --line:#414938; --shadow:0 2px 0 rgba(0,0,0,.16);
+  --c-green:#37422F; --c-pink:#453232; --c-blue:#2F3A47; --c-yellow:#453D28; --c-purple:#3A3548; --c-peach:#453A2F;
+  --t-green:#B6CFA9; --t-pink:#E4B2B2; --t-blue:#A9C4E4; --t-yellow:#E0C481; --t-purple:#BDB2E0; --t-peach:#DDB694;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);line-height:1.75;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margin:0}
 
-  <style>
-    /* ตรงนี้คือส่วน CSS ทั้งหมด */
+/* แถบบน */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);border-bottom:1.5px solid var(--line)}
+.bar-in{max-width:1000px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:16px}
+.logo{font-family:var(--font-display);font-weight:700;font-size:20px;color:var(--primary);
+  background:none;border:none;cursor:pointer;padding:0;flex:none;display:flex;align-items:center;gap:6px}
+nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{font-family:var(--font-body);font-size:14px;color:var(--ink-soft);background:none;border:none;
+  border-radius:10px;padding:6px 12px;cursor:pointer;white-space:nowrap}
+nav button:hover{background:var(--primary-soft);color:var(--primary-deep)}
+nav button[aria-current="page"]{background:var(--primary-soft);color:var(--primary-deep);font-weight:500}
 
-    body {
-      font-family: "Segoe UI", "Sarabun", sans-serif;
-      background-color: #f4f1ea;
-      color: #333333;
-      max-width: 700px;
-      margin: 0 auto;
-      padding: 60px 24px;
-      line-height: 1.8;
-    }
+.wrap{max-width:1000px;margin:0 auto;padding-block:26px 60px;padding-left:20px;padding-right:20px}
 
-    h1 {
-      color: #2c5f4f;
-      font-size: 36px;
-      border-bottom: 3px solid #2c5f4f;
-      padding-bottom: 12px;
-      margin-bottom: 24px;
-    }
+/* หน้าแรก */
+.hero{background:var(--card);border:1.5px solid var(--line);border-radius:24px;padding:26px 28px;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center;box-shadow:var(--shadow)}
+@media (max-width:640px){.hero{grid-template-columns:1fr}.hero svg{justify-self:center}}
+.hero h1{font-size:clamp(26px,5.5vw,36px);color:var(--primary);line-height:1.5}
+.hero p{margin:6px 0 0;color:var(--ink-soft);font-size:14.5px;max-width:46ch}
+.quote{font-family:var(--font-display);color:var(--primary-deep);font-size:14.5px;margin-top:12px;line-height:1.7}
 
-    p {
-      font-size: 17px;
-      margin-bottom: 16px;
-    }
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:14px;margin-top:20px}
+.tile{border:1.5px solid var(--line);border-radius:var(--r);padding:18px 16px 16px;cursor:pointer;
+  text-align:left;font-family:var(--font-body);display:flex;flex-direction:column;gap:10px;
+  box-shadow:var(--shadow);transition:transform .12s ease}
+.tile:hover{transform:translateY(-3px)}
+.tile .nm{font-family:var(--font-display);font-weight:600;font-size:16.5px}
+.tile .ds{font-size:12.5px;line-height:1.6;opacity:.85}
+.tile svg{flex:none}
+.t-green{background:var(--c-green);color:var(--t-green)}
+.t-pink{background:var(--c-pink);color:var(--t-pink)}
+.t-blue{background:var(--c-blue);color:var(--t-blue)}
+.t-yellow{background:var(--c-yellow);color:var(--t-yellow)}
+.t-purple{background:var(--c-purple);color:var(--t-purple)}
+.t-peach{background:var(--c-peach);color:var(--t-peach)}
+.ribbon{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:26px;
+  color:var(--ink-soft);font-family:var(--font-display);font-size:14px;text-align:center}
 
-    .highlight {
-      background-color: #ffffff;
-      border-left: 4px solid #c08a3e;
-      padding: 20px;
-      border-radius: 6px;
-    }
-  </style>
+/* ทั่วไป */
+.head{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.head h2{font-size:23px;color:var(--primary)}
+.back{font-family:var(--font-body);font-size:13.5px;color:var(--ink-soft);background:none;
+  border:1.5px solid var(--line);border-radius:10px;padding:5px 12px;cursor:pointer}
+.back:hover{color:var(--primary-deep);border-color:var(--primary)}
+.panel{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);min-width:0}
+.panel h3{font-size:17px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:800px){.grid{grid-template-columns:1fr}}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow)}
+.stat .n{font-family:var(--font-display);font-weight:700;font-size:28px;color:var(--primary-deep);line-height:1.35;font-variant-numeric:tabular-nums}
+.stat .l{font-size:12.5px;color:var(--ink-soft)}
+
+/* ปฏิทิน */
+.calbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.calbar h3{margin:0}
+.nav-b{display:flex;gap:6px}
+.icon-btn{width:33px;height:33px;border:1.5px solid var(--line);background:transparent;color:var(--ink);
+  border-radius:10px;cursor:pointer;font-size:15px;display:grid;place-items:center;font-family:var(--font-body)}
+.icon-btn:hover{border-color:var(--primary);color:var(--primary)}
+.dow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+.dow span{text-align:center;font-size:11.5px;color:var(--ink-soft)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.day{aspect-ratio:1;border:1.5px solid transparent;background:transparent;border-radius:12px;cursor:pointer;
+  font-family:var(--font-body);font-size:14px;color:var(--ink);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;padding:0;font-variant-numeric:tabular-nums}
+.day:hover{background:var(--primary-soft)}
+.day.blank{pointer-events:none}
+.day.today{border-color:var(--primary)}
+.day.sel{background:var(--primary);color:#fff;border-color:var(--primary)}
+.day.sel .dot{background:#fff}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--primary)}
+.dot.hide{visibility:hidden}
+
+/* รายการ */
+.entry{border:1.5px solid var(--line);border-radius:14px;padding:13px 15px;margin-bottom:10px}
+.eh{display:flex;justify-content:space-between;gap:10px;align-items:start}
+.entry h4{font-family:var(--font-display);font-size:15.5px;font-weight:600;margin:0;min-width:0}
+.entry p{margin:6px 0 0;font-size:14px;color:var(--ink-soft);white-space:pre-wrap}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.chip{background:var(--primary-soft);color:var(--primary-deep);border-radius:99px;padding:2px 10px;font-size:12px;font-weight:500}
+.chip.cat{background:var(--c-blue);color:var(--t-blue)}
+.del{border:none;background:none;color:var(--ink-soft);cursor:pointer;font-size:12px;flex:none;font-family:var(--font-body)}
+.del:hover{color:var(--primary-deep)}
+.empty{text-align:center;padding:24px 8px;color:var(--ink-soft);font-size:14px}
+.empty svg{display:block;margin:0 auto 10px}
+
+/* ฟอร์ม */
+form{display:flex;flex-direction:column;gap:12px;margin-top:14px;border-top:1.5px dashed var(--line);padding-top:16px}
+label{font-size:13px;font-weight:500;display:block;margin-bottom:5px}
+input,textarea,select{width:100%;font-family:var(--font-body);font-size:14.5px;color:var(--ink);
+  background:var(--bg);border:1.5px solid var(--line);border-radius:11px;padding:9px 12px;line-height:1.6}
+textarea{resize:vertical;min-height:74px}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:transparent}
+.hint{font-size:12px;color:var(--ink-soft);margin-top:4px}
+.btn{font-family:var(--font-display);font-weight:600;font-size:15px;background:var(--primary);color:#fff;
+  border:none;border-radius:12px;padding:10px 20px;cursor:pointer}
+.btn:hover{background:var(--primary-deep)}
+.btn.ghost{background:transparent;color:var(--primary-deep);border:1.5px solid var(--line)}
+.btn.ghost:hover{background:var(--primary-soft)}
+.row{display:flex;gap:9px;flex-wrap:wrap}
+.err{color:#A85252;font-size:13px}
+
+/* ไอเดีย */
+.idea{display:flex;align-items:start;gap:10px;border:1.5px solid var(--line);border-radius:13px;padding:11px 14px;margin-bottom:9px}
+.idea input[type=checkbox]{width:17px;height:17px;flex:none;margin-top:5px;accent-color:var(--primary)}
+.idea .tx{flex:1;min-width:0;font-size:14.5px}
+.idea.done .tx{text-decoration:line-through;color:var(--ink-soft)}
+.idea .dt{font-size:12px;color:var(--ink-soft);flex:none}
+
+/* ทักษะ + สถิติ */
+.skills{display:flex;flex-wrap:wrap;gap:8px}
+.skill{background:var(--primary-soft);color:var(--primary-deep);border-radius:99px;padding:5px 14px;font-size:13.5px;font-weight:500}
+.skill b{font-family:var(--font-display)}
+.brow{display:grid;grid-template-columns:minmax(90px,auto) 1fr auto;gap:10px;align-items:center;margin-bottom:9px;font-size:13.5px}
+.bar-track{background:var(--primary-soft);border-radius:99px;height:11px;overflow:hidden}
+.bar-fill{background:var(--primary);height:100%;border-radius:99px}
+.brow .v{color:var(--ink-soft);font-variant-numeric:tabular-nums}
+pre{background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:14px;
+  white-space:pre-wrap;font-family:var(--font-body);font-size:14px;line-height:1.85;margin:12px 0 0}
+.foot{text-align:center;color:var(--ink-soft);font-size:12.5px;margin-top:28px}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+</style>
 </head>
 <body>
+<div class="bar"><div class="bar-in">
+  <button class="logo" data-go="home">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 21 V11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M12 13 q-7-1-8-9 q8 0 8 9z" fill="currentColor" opacity=".35"/>
+      <path d="M12 15 q6-1 7-8 q-7 0-7 8z" fill="currentColor" opacity=".6"/>
+    </svg>my log
+  </button>
+  <nav>
+    <button data-go="home">หน้าแรก</button>
+    <button data-go="log">บันทึกการทำงาน</button>
+    <button data-go="ideas">ไอเดีย</button>
+    <button data-go="skills">ทักษะ</button>
+    <button data-go="resume">เรซูเม่</button>
+    <button data-go="stats">สถิติ</button>
+  </nav>
+</div></div>
 
-  <h1>สวัสดี นี่คือเว็บแรกของฉัน</h1>
+<div class="wrap">
 
-  <p>ถ้าคุณอ่านข้อความนี้จากอินเทอร์เน็ตได้ แปลว่าสำเร็จแล้ว</p>
+<!-- หน้าแรก -->
+<section id="v-home">
+  <div class="hero">
+    <div>
+      <h1>สวัสดีค่ะ วันนี้มีอะไรอยากบันทึกไหม</h1>
+      <p>ที่เก็บสิ่งที่ทำในแต่ละวัน ไอเดียที่คิดได้ และทักษะที่ค่อยๆ สะสม พอถึงวันที่ต้องเขียนเรซูเม่ ทุกอย่างรออยู่ตรงนี้แล้ว</p>
+      <p class="quote">บันทึกสิ่งเล็กๆ ในทุกวัน<br>อาจกลายเป็นเรื่องใหญ่ในเรซูเม่ของคุณได้</p>
+    </div>
+    <svg width="210" height="150" viewBox="0 0 210 150" fill="none" aria-hidden="true">
+      <ellipse cx="105" cy="132" rx="88" ry="9" fill="var(--primary-soft)"/>
+      <rect x="18" y="108" width="62" height="7" rx="3.5" fill="var(--c-pink)" stroke="var(--primary)" stroke-width="2"/>
+      <rect x="22" y="115" width="62" height="7" rx="3.5" fill="var(--c-yellow)" stroke="var(--primary)" stroke-width="2"/>
+      <rect x="18" y="122" width="62" height="7" rx="3.5" fill="var(--c-blue)" stroke="var(--primary)" stroke-width="2"/>
+      <path d="M126 129 q-4-16 10-17 q14 1 10 17z" fill="var(--c-green)" stroke="var(--primary)" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M136 112 q-2-14 -12-18 q6 12 12 18z" fill="var(--c-green)" stroke="var(--primary)" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M136 112 q3-16 14-19 q-8 12 -14 19z" fill="var(--c-green)" stroke="var(--primary)" stroke-width="2.2" stroke-linejoin="round"/>
+      <rect x="96" y="46" width="70" height="48" rx="8" fill="var(--card)" stroke="var(--primary)" stroke-width="2.4"/>
+      <path d="M104 60 h30 M104 70 h44 M104 80 h36" stroke="var(--primary)" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
+      <path d="M154 40 l4 8 8 4 -8 4 -4 8 -4-8 -8-4 8-4z" fill="var(--c-yellow)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M40 60 q0-10 10-10 q10 0 10 10 q8 0 8 8 t-8 8 H42 q-9 0-9-8 t7-8z" fill="var(--card)" stroke="var(--primary)" stroke-width="2.2" stroke-linejoin="round"/>
+      <ellipse cx="55" cy="97" rx="30" ry="14" fill="var(--card)" stroke="var(--primary)" stroke-width="2.4"/>
+      <path d="M32 90 l-3-9 8 4" fill="var(--card)" stroke="var(--primary)" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M44 86 l-1-8 7 5" fill="var(--card)" stroke="var(--primary)" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M36 95 q3 3 6 0 M48 95 q3 3 6 0" stroke="var(--primary)" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M84 98 q10-3 14 2" stroke="var(--primary)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+    </svg>
+  </div>
 
-  <p class="highlight">
-    ย่อหน้านี้ถูกใส่ class ชื่อ highlight ไว้ จึงหน้าตาไม่เหมือนย่อหน้าอื่น
+  <div class="menu">
+    <button class="tile t-green" data-go="log">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+        <rect x="6" y="4" width="22" height="26" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="2.2"/>
+        <path d="M12 12h10M12 18h10M12 24h6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      <span class="nm">บันทึกการทำงาน</span>
+      <span class="ds">จดสิ่งที่ทำในแต่ละวัน พร้อมปฏิทินย้อนดูได้</span>
+    </button>
+    <button class="tile t-yellow" data-go="ideas">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+        <path d="M17 5a9 9 0 0 1 5 16.5V25h-10v-3.5A9 9 0 0 1 17 5z" fill="var(--card)" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+        <path d="M13 28h8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      <span class="nm">ไอเดีย</span>
+      <span class="ds">เก็บไอเดียก่อนจะลืม ติ๊กเมื่อทำแล้ว</span>
+    </button>
+    <button class="tile t-purple" data-go="skills">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+        <path d="M17 7l13 6-13 6-13-6 13-6z" fill="var(--card)" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+        <path d="M10 16v7c0 2 3.5 4 7 4s7-2 7-4v-7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      <span class="nm">ทักษะที่สะสม</span>
+      <span class="ds">รวมทักษะและเครื่องมือจากบันทึกให้เอง</span>
+    </button>
+    <button class="tile t-pink" data-go="resume">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+        <rect x="5" y="6" width="24" height="22" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="2.2"/>
+        <circle cx="13" cy="14" r="3.2" stroke="currentColor" stroke-width="2.2"/>
+        <path d="M20 13h5M20 18h5M9 23h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      <span class="nm">ร่างเรซูเม่</span>
+      <span class="ds">เรียบเรียงบันทึกเป็นร่างให้อัตโนมัติ</span>
+    </button>
+    <button class="tile t-blue" data-go="stats">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+        <path d="M6 27V18M14 27V9M22 27v-6M30 27V13" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+      </svg>
+      <span class="nm">สถิติ</span>
+      <span class="ds">ดูว่าเดือนไหนทำอะไรไปมากน้อยแค่ไหน</span>
+    </button>
+    <button class="tile t-peach" data-go="backup">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+        <rect x="5" y="9" width="24" height="18" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="2.2"/>
+        <path d="M5 15h24M11 5v4M23 5v4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      <span class="nm">ข้อมูลสำรอง</span>
+      <span class="ds">คัดลอกเก็บไว้ หรือย้ายไปเครื่องอื่น</span>
+    </button>
+  </div>
+
+  <p class="ribbon">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20 q-8-5-8-11 a4 4 0 0 1 8-1 a4 4 0 0 1 8 1 q0 6-8 11z" fill="var(--c-pink)" stroke="var(--primary)" stroke-width="1.8"/></svg>
+    ทำทีละนิดทุกวัน รวมกันแล้วไปได้ไกลกว่าที่คิด
   </p>
+</section>
 
+<!-- บันทึกการทำงาน -->
+<section id="v-log" hidden>
+  <div class="head"><button class="back" data-go="home">← หน้าแรก</button><h2>บันทึกการทำงาน</h2></div>
+  <div class="grid">
+    <div class="panel">
+      <div class="calbar"><h3 id="cal-title">—</h3>
+        <div class="nav-b">
+          <button class="icon-btn" id="prev" aria-label="เดือนก่อนหน้า">‹</button>
+          <button class="icon-btn" id="today-btn" aria-label="กลับมาเดือนนี้">•</button>
+          <button class="icon-btn" id="next" aria-label="เดือนถัดไป">›</button>
+        </div>
+      </div>
+      <div class="dow"><span>อา</span><span>จ</span><span>อ</span><span>พ</span><span>พฤ</span><span>ศ</span><span>ส</span></div>
+      <div class="days" id="days"></div>
+    </div>
+    <div class="panel">
+      <h3 id="day-title">—</h3>
+      <div id="day-list"></div>
+      <button class="btn ghost" id="open-form" style="width:100%">+ เขียนบันทึกของวันนี้</button>
+      <form id="form" hidden>
+        <div><label for="f-title">ทำอะไร</label>
+          <input id="f-title" maxlength="90" placeholder="เช่น ทำงบกระแสเงินสดไตรมาส 3"></div>
+        <div><label for="f-detail">รายละเอียด</label>
+          <textarea id="f-detail" maxlength="800" placeholder="ทำยังไง เจอปัญหาอะไร แก้ยังไง"></textarea></div>
+        <div><label for="f-cat">ประเภท</label>
+          <select id="f-cat"><option>งานประจำ</option><option>โปรเจกต์</option><option>แก้ปัญหา</option>
+            <option>เรียนรู้สิ่งใหม่</option><option>ประชุม</option><option>ช่วยทีม</option></select></div>
+        <div><label for="f-skill">ทักษะหรือเครื่องมือที่ใช้</label>
+          <input id="f-skill" placeholder="Excel, PEAK, ภ.ง.ด.53">
+          <div class="hint">คั่นด้วยจุลภาค ระบบจะรวมให้เองในหน้าทักษะ</div></div>
+        <div><label for="f-result">ผลลัพธ์ที่วัดได้</label>
+          <input id="f-result" maxlength="140" placeholder="เช่น ลดเวลากระทบยอดจาก 3 ชม. เหลือ 1 ชม.">
+          <div class="hint">ช่องนี้คือหัวใจของเรซูเม่ เว้นว่างได้ถ้ายังไม่มี</div></div>
+        <div class="err" id="err" hidden></div>
+        <div class="row"><button type="submit" class="btn">บันทึก</button>
+          <button type="button" class="btn ghost" id="cancel">ยกเลิก</button></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ไอเดีย -->
+<section id="v-ideas" hidden>
+  <div class="head"><button class="back" data-go="home">← หน้าแรก</button><h2>ไอเดีย</h2></div>
+  <div class="panel">
+    <form id="idea-form" style="margin-top:0;border:none;padding-top:0">
+      <div><label for="i-text">คิดอะไรออก จดไว้ก่อน</label>
+        <input id="i-text" maxlength="160" placeholder="เช่น ลองทำเทมเพลตสรุปโปรเจกต์สำหรับเรซูเม่"></div>
+      <div class="row"><button type="submit" class="btn">เพิ่มไอเดีย</button></div>
+    </form>
+    <div id="idea-list" style="margin-top:18px"></div>
+  </div>
+</section>
+
+<!-- ทักษะ -->
+<section id="v-skills" hidden>
+  <div class="head"><button class="back" data-go="home">← หน้าแรก</button><h2>ทักษะที่สะสม</h2></div>
+  <div class="panel">
+    <p class="hint" style="margin:0 0 14px">รวมจากช่องทักษะในบันทึกทั้งหมด ตัวเลขคือจำนวนครั้งที่ใช้</p>
+    <div class="skills" id="skills"></div>
+  </div>
+</section>
+
+<!-- เรซูเม่ -->
+<section id="v-resume" hidden>
+  <div class="head"><button class="back" data-go="home">← หน้าแรก</button><h2>ร่างเรซูเม่</h2></div>
+  <div class="panel">
+    <p class="hint" style="margin:0 0 14px">รวบรวมจากบันทึกทั้งหมดโดยอัตโนมัติ จัดกลุ่มตามประเภทงาน ไม่ต้องกรอกซ้ำ</p>
+    <div class="row"><button class="btn" id="gen">สร้างร่าง</button>
+      <button class="btn ghost" id="copy-draft">คัดลอกร่าง</button></div>
+    <pre id="draft" hidden></pre>
+  </div>
+</section>
+
+<!-- สถิติ -->
+<section id="v-stats" hidden>
+  <div class="head"><button class="back" data-go="home">← หน้าแรก</button><h2>สถิติ</h2></div>
+  <div class="stats">
+    <div class="stat"><div class="n" id="s-month">0</div><div class="l">บันทึกเดือนนี้</div></div>
+    <div class="stat"><div class="n" id="s-total">0</div><div class="l">บันทึกทั้งหมด</div></div>
+    <div class="stat"><div class="n" id="s-skill">0</div><div class="l">ทักษะที่เคยใช้</div></div>
+    <div class="stat"><div class="n" id="s-idea">0</div><div class="l">ไอเดียที่ทำแล้ว</div></div>
+  </div>
+  <div class="panel"><h3>แยกตามประเภทงาน</h3><div id="bycat"></div></div>
+  <div class="panel" style="margin-top:16px"><h3>บันทึกย้อนหลัง 6 เดือน</h3><div id="bymonth"></div></div>
+</section>
+
+<!-- ข้อมูลสำรอง -->
+<section id="v-backup" hidden>
+  <div class="head"><button class="back" data-go="home">← หน้าแรก</button><h2>ข้อมูลสำรอง</h2></div>
+  <div class="panel">
+    <p class="hint" style="margin:0 0 14px">ข้อมูลเก็บอยู่ในเบราว์เซอร์ของเครื่องนี้เท่านั้น ถ้าล้างข้อมูลเบราว์เซอร์จะหาย แนะนำให้คัดลอกเก็บไว้ในไฟล์เป็นระยะ</p>
+    <div class="row"><button class="btn" id="copy">คัดลอกข้อมูลทั้งหมด</button>
+      <button class="btn ghost" id="clear-demo">ลบตัวอย่างทิ้ง</button></div>
+    <form id="restore-form" style="border-top:1.5px dashed var(--line);margin-top:18px">
+      <div><label for="r-text">กู้คืนข้อมูล</label>
+        <textarea id="r-text" placeholder="วางข้อมูลที่เคยคัดลอกไว้ตรงนี้"></textarea>
+        <div class="hint">การกู้คืนจะเขียนทับข้อมูลปัจจุบันทั้งหมด</div></div>
+      <div class="err" id="r-err" hidden></div>
+      <div class="row"><button type="submit" class="btn ghost">กู้คืน</button></div>
+    </form>
+  </div>
+</section>
+
+<p class="foot">my log · บันทึกส่วนตัว เก็บไว้ในเครื่องนี้</p>
+</div>
+
+<script>
+(function(){
+  var KEY='mylog.v2';
+  var TH_M=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  var TH_MS=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  var TH_D=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+  var VIEWS=['home','log','ideas','skills','resume','stats','backup'];
+  var $=function(id){return document.getElementById(id);};
+
+  function key(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(db));}catch(e){}}
+  function load(){try{var r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}return null;}
+
+  function seed(){
+    var t=new Date(), a=new Date(t), b=new Date(t);
+    a.setDate(a.getDate()-2); b.setDate(b.getDate()-5);
+    return {entries:[
+      {id:1,date:key(t),title:'ตัวอย่าง — กระทบยอดธนาคารเดือนสิงหาคม',detail:'ไล่รายการที่ยังไม่ลงบัญชี เจอค่าธรรมเนียม 3 รายการที่ตกหล่น',cat:'งานประจำ',skills:['Excel','PEAK'],result:'ปิดยอดได้ตรงภายในวันเดียว',demo:true},
+      {id:2,date:key(a),title:'ตัวอย่าง — ยื่น ภ.พ.30 ผ่าน RD e-Filing',detail:'ตรวจใบกำกับภาษีซื้อขายก่อนยื่น แล้วเก็บหลักฐานเข้าแฟ้ม',cat:'งานประจำ',skills:['RD e-Filing','ภ.พ.30'],result:'',demo:true},
+      {id:3,date:key(b),title:'ตัวอย่าง — ทำเทมเพลตกระดาษทำการใหม่',detail:'รวมสูตรที่ต้องพิมพ์ซ้ำทุกเดือนไว้ในไฟล์เดียว',cat:'โปรเจกต์',skills:['Excel'],result:'ลดเวลาทำกระดาษทำการจาก 3 ชม. เหลือ 1 ชม.',demo:true}
+    ],ideas:[
+      {id:11,text:'ตัวอย่าง — ลองทำสรุปโปรเจกต์เป็นไฟล์เดียวสำหรับแนบเรซูเม่',done:false,date:key(a),demo:true},
+      {id:12,text:'ตัวอย่าง — หาคอร์สเรียน Excel ขั้นสูง',done:true,date:key(b),demo:true}
+    ]};
+  }
+
+  var db=load()||seed();
+  if(!db.entries)db.entries=[]; if(!db.ideas)db.ideas=[];
+  var view=new Date(), sel=new Date();
+
+  /* ---- สลับหน้า ---- */
+  function go(name){
+    if(VIEWS.indexOf(name)<0)name='home';
+    VIEWS.forEach(function(v){var el=$('v-'+v);if(el)el.hidden=(v!==name);});
+    document.querySelectorAll('nav button').forEach(function(b){
+      if(b.dataset.go===name)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
+    });
+    try{if(location.hash.slice(1)!==name)history.replaceState(null,'','#'+name);}catch(e){}
+    window.scrollTo(0,0);
+    if(name==='skills')renderSkills();
+    if(name==='stats')renderStats();
+    if(name==='ideas')renderIdeas();
+  }
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('[data-go]'); if(t)go(t.dataset.go);
+  });
+  go((location.hash||'').slice(1)||'home');
+
+  /* ---- ปฏิทิน ---- */
+  function ofDay(k){return db.entries.filter(function(e){return e.date===k;});}
+  function renderCal(){
+    $('cal-title').textContent=TH_M[view.getMonth()]+' '+(view.getFullYear()+543);
+    var first=new Date(view.getFullYear(),view.getMonth(),1).getDay();
+    var last=new Date(view.getFullYear(),view.getMonth()+1,0).getDate();
+    var box=$('days'); box.textContent='';
+    var todayK=key(new Date()), selK=key(sel);
+    for(var i=0;i<first;i++){var b=document.createElement('div');b.className='day blank';box.appendChild(b);}
+    for(var d=1;d<=last;d++){
+      var dt=new Date(view.getFullYear(),view.getMonth(),d), k=key(dt);
+      var btn=document.createElement('button');
+      btn.className='day'+(k===todayK?' today':'')+(k===selK?' sel':'');
+      btn.setAttribute('aria-label',d+' '+TH_M[view.getMonth()]);
+      var n=document.createElement('span'); n.textContent=d; btn.appendChild(n);
+      var dot=document.createElement('span'); dot.className='dot'+(ofDay(k).length?'':' hide'); btn.appendChild(dot);
+      btn.onclick=(function(dd){return function(){sel=dd;renderCal();renderDay();closeForm();};})(dt);
+      box.appendChild(btn);
+    }
+  }
+  function renderDay(){
+    $('day-title').textContent='วัน'+TH_D[sel.getDay()]+'ที่ '+sel.getDate()+' '+TH_M[sel.getMonth()]+' '+(sel.getFullYear()+543);
+    var list=$('day-list'), items=ofDay(key(sel));
+    list.textContent='';
+    if(!items.length){
+      var e=document.createElement('div'); e.className='empty';
+      e.innerHTML='<svg width="44" height="32" viewBox="0 0 44 32" fill="none" aria-hidden="true">'+
+        '<ellipse cx="22" cy="20" rx="15" ry="8" stroke="var(--line)" stroke-width="2.4"/>'+
+        '<path d="M10 14 l-2-6 5 3" stroke="var(--line)" stroke-width="2.4" stroke-linejoin="round"/>'+
+        '<path d="M20 11 l-1-6 5 4" stroke="var(--line)" stroke-width="2.4" stroke-linejoin="round"/>'+
+        '<path d="M15 19 q2 2 4 0 M24 19 q2 2 4 0" stroke="var(--line)" stroke-width="2.2" stroke-linecap="round"/></svg>'+
+        'ยังไม่มีบันทึกของวันนี้';
+      list.appendChild(e);
+    }
+    items.forEach(function(it){
+      var w=document.createElement('article'); w.className='entry';
+      var h=document.createElement('div'); h.className='eh';
+      var t=document.createElement('h4'); t.textContent=it.title; h.appendChild(t);
+      var x=document.createElement('button'); x.className='del'; x.textContent='ลบ';
+      x.onclick=function(){db.entries=db.entries.filter(function(e){return e.id!==it.id;});save();renderCal();renderDay();};
+      h.appendChild(x); w.appendChild(h);
+      if(it.detail){var p=document.createElement('p');p.textContent=it.detail;w.appendChild(p);}
+      if(it.result){var r=document.createElement('p');r.textContent='ผลลัพธ์: '+it.result;w.appendChild(r);}
+      var c=document.createElement('div'); c.className='chips';
+      var cc=document.createElement('span'); cc.className='chip cat'; cc.textContent=it.cat; c.appendChild(cc);
+      (it.skills||[]).forEach(function(s){var sp=document.createElement('span');sp.className='chip';sp.textContent=s;c.appendChild(sp);});
+      w.appendChild(c); list.appendChild(w);
+    });
+  }
+  function openForm(){$('form').hidden=false;$('open-form').hidden=true;$('f-title').focus();}
+  function closeForm(){$('form').hidden=true;$('open-form').hidden=false;$('err').hidden=true;
+    ['f-title','f-detail','f-skill','f-result'].forEach(function(i){$(i).value='';});}
+  $('open-form').onclick=openForm; $('cancel').onclick=closeForm;
+  $('form').onsubmit=function(ev){
+    ev.preventDefault();
+    var t=$('f-title').value.trim();
+    if(!t){var e=$('err');e.textContent='ใส่หัวข้อสั้นๆ ก่อนว่าทำอะไร';e.hidden=false;$('f-title').focus();return;}
+    $('err').hidden=true;
+    db.entries.push({id:Date.now(),date:key(sel),title:t,detail:$('f-detail').value.trim(),cat:$('f-cat').value,
+      skills:$('f-skill').value.split(',').map(function(s){return s.trim();}).filter(Boolean),
+      result:$('f-result').value.trim()});
+    save(); closeForm(); renderCal(); renderDay();
+  };
+  ['f-title','f-detail','f-skill','f-result'].forEach(function(i){$(i).oninput=function(){$('err').hidden=true;};});
+  $('prev').onclick=function(){view=new Date(view.getFullYear(),view.getMonth()-1,1);renderCal();};
+  $('next').onclick=function(){view=new Date(view.getFullYear(),view.getMonth()+1,1);renderCal();};
+  $('today-btn').onclick=function(){view=new Date();sel=new Date();renderCal();renderDay();};
+
+  /* ---- ไอเดีย ---- */
+  function renderIdeas(){
+    var box=$('idea-list'); box.textContent='';
+    if(!db.ideas.length){var e=document.createElement('p');e.className='hint';e.textContent='ยังไม่มีไอเดีย พิมพ์เพิ่มได้เลย';box.appendChild(e);return;}
+    db.ideas.slice().sort(function(a,b){return (a.done?1:0)-(b.done?1:0);}).forEach(function(it){
+      var w=document.createElement('div'); w.className='idea'+(it.done?' done':'');
+      var cb=document.createElement('input'); cb.type='checkbox'; cb.checked=!!it.done;
+      cb.id='idea-'+it.id;
+      cb.onchange=function(){it.done=cb.checked;save();renderIdeas();};
+      var tx=document.createElement('label'); tx.className='tx'; tx.htmlFor=cb.id; tx.textContent=it.text;
+      var dt=document.createElement('span'); dt.className='dt'; dt.textContent=it.date.slice(5).replace('-','/');
+      var x=document.createElement('button'); x.className='del'; x.textContent='ลบ';
+      x.onclick=function(){db.ideas=db.ideas.filter(function(i){return i.id!==it.id;});save();renderIdeas();};
+      w.appendChild(cb);w.appendChild(tx);w.appendChild(dt);w.appendChild(x);box.appendChild(w);
+    });
+  }
+  $('idea-form').onsubmit=function(ev){
+    ev.preventDefault();
+    var t=$('i-text').value.trim(); if(!t){$('i-text').focus();return;}
+    db.ideas.push({id:Date.now(),text:t,done:false,date:key(new Date())});
+    $('i-text').value=''; save(); renderIdeas();
+  };
+
+  /* ---- ทักษะ ---- */
+  function skillCount(){
+    var c={}; db.entries.forEach(function(e){(e.skills||[]).forEach(function(s){c[s]=(c[s]||0)+1;});}); return c;
+  }
+  function renderSkills(){
+    var c=skillCount(), keys=Object.keys(c).sort(function(a,b){return c[b]-c[a];});
+    var box=$('skills'); box.textContent='';
+    if(!keys.length){var p=document.createElement('p');p.className='hint';p.textContent='พอเริ่มบันทึกและใส่ทักษะ รายการจะขึ้นตรงนี้เอง';box.appendChild(p);return;}
+    keys.forEach(function(k){
+      var s=document.createElement('span'); s.className='skill'; s.textContent=k+' ';
+      var b=document.createElement('b'); b.textContent='×'+c[k]; s.appendChild(b); box.appendChild(s);
+    });
+  }
+
+  /* ---- สถิติ ---- */
+  function bars(box,rows){
+    box.textContent='';
+    var max=Math.max.apply(null,rows.map(function(r){return r[1];}).concat([1]));
+    if(!rows.length){var p=document.createElement('p');p.className='hint';p.textContent='ยังไม่มีข้อมูล';box.appendChild(p);return;}
+    rows.forEach(function(r){
+      var w=document.createElement('div'); w.className='brow';
+      var l=document.createElement('span'); l.textContent=r[0];
+      var tr=document.createElement('div'); tr.className='bar-track';
+      var f=document.createElement('div'); f.className='bar-fill'; f.style.width=(r[1]/max*100)+'%';
+      tr.appendChild(f);
+      var v=document.createElement('span'); v.className='v'; v.textContent=r[1];
+      w.appendChild(l);w.appendChild(tr);w.appendChild(v);box.appendChild(w);
+    });
+  }
+  function renderStats(){
+    var now=new Date(), pre=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+    $('s-month').textContent=db.entries.filter(function(e){return e.date.indexOf(pre)===0;}).length;
+    $('s-total').textContent=db.entries.length;
+    $('s-skill').textContent=Object.keys(skillCount()).length;
+    $('s-idea').textContent=db.ideas.filter(function(i){return i.done;}).length;
+    var cat={}; db.entries.forEach(function(e){cat[e.cat]=(cat[e.cat]||0)+1;});
+    bars($('bycat'),Object.keys(cat).map(function(k){return [k,cat[k]];}).sort(function(a,b){return b[1]-a[1];}));
+    var rows=[];
+    for(var i=5;i>=0;i--){
+      var d=new Date(now.getFullYear(),now.getMonth()-i,1);
+      var p=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+      rows.push([TH_MS[d.getMonth()],db.entries.filter(function(e){return e.date.indexOf(p)===0;}).length]);
+    }
+    bars($('bymonth'),rows);
+  }
+
+  /* ---- เรซูเม่ ---- */
+  function draftText(){
+    if(!db.entries.length)return 'ยังไม่มีบันทึก';
+    var byCat={};
+    db.entries.slice().sort(function(a,b){return a.date<b.date?1:-1;}).forEach(function(e){(byCat[e.cat]=byCat[e.cat]||[]).push(e);});
+    var txt='';
+    Object.keys(byCat).forEach(function(c){
+      txt+='['+c+']\n';
+      byCat[c].forEach(function(e){
+        txt+='• '+e.title;
+        if(e.result)txt+=' — '+e.result;
+        if(e.skills&&e.skills.length)txt+=' ('+e.skills.join(', ')+')';
+        txt+='\n';
+      });
+      txt+='\n';
+    });
+    return txt.trim();
+  }
+  $('gen').onclick=function(){var o=$('draft');o.textContent=draftText();o.hidden=false;};
+  function copyTo(btn,text,label){
+    function done(ok){btn.textContent=ok?'คัดลอกแล้ว':'คัดลอกไม่สำเร็จ';setTimeout(function(){btn.textContent=label;},1800);}
+    try{navigator.clipboard.writeText(text).then(function(){done(true);},function(){done(false);});}catch(e){done(false);}
+  }
+  $('copy-draft').onclick=function(){copyTo(this,draftText(),'คัดลอกร่าง');};
+
+  /* ---- สำรอง ---- */
+  $('copy').onclick=function(){copyTo(this,JSON.stringify(db),'คัดลอกข้อมูลทั้งหมด');};
+  $('clear-demo').onclick=function(){
+    db.entries=db.entries.filter(function(e){return !e.demo;});
+    db.ideas=db.ideas.filter(function(i){return !i.demo;});
+    save(); renderCal(); renderDay(); renderIdeas(); renderSkills(); renderStats();
+  };
+  $('restore-form').onsubmit=function(ev){
+    ev.preventDefault();
+    var e=$('r-err');
+    try{
+      var o=JSON.parse($('r-text').value);
+      if(!o||!Array.isArray(o.entries))throw 0;
+      db={entries:o.entries,ideas:Array.isArray(o.ideas)?o.ideas:[]};
+      save(); $('r-text').value=''; e.hidden=true;
+      renderCal();renderDay();renderIdeas();renderSkills();renderStats();
+      go('log');
+    }catch(err){e.textContent='ข้อมูลไม่ถูกต้อง ลองคัดลอกมาใหม่ทั้งก้อน';e.hidden=false;}
+  };
+  $('r-text').oninput=function(){$('r-err').hidden=true;};
+
+  renderCal(); renderDay(); renderIdeas(); renderSkills(); renderStats();
+})();
+</script>
 </body>
 </html>
