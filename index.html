@@ -433,8 +433,6 @@ body[data-view="book"]{--bg:var(--bg-book)}
 .sheet .tagline2{display:flex;flex-wrap:wrap;gap:6px}
 .sheet .tagline2 span{background:#eef3ea;color:#3c5a35;border-radius:99px;padding:2px 11px;font-size:12.5px}
 .sheet .empty-note{color:#888;font-size:13px}
-.extract{background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:14px;
-  max-height:260px;overflow:auto;white-space:pre-wrap;font-size:13px;line-height:1.7;margin-top:10px}
 
 @media print{
   .bar,.pagehead,.stickers,#toaster,.rmode,.no-print,.foot,.lane,.focus-pop{display:none!important}
@@ -1013,14 +1011,6 @@ body{padding-bottom:calc(var(--lane) + env(safe-area-inset-bottom,0px))}
   </div>
 
   <div id="r-editor">
-    <div class="panel">
-      <h3>มีเรซูเม่เดิมอยู่แล้ว</h3>
-      <p class="hint" style="margin:0 0 12px">แนบไฟล์ PDF หรือ TXT แล้วระบบจะดึงข้อความออกมาให้ คัดลอกไปวางในช่องด้านล่างได้เลย ระบบจะไม่เดาให้เอง เพราะเรซูเม่ผิดคือเสียโอกาสงาน</p>
-      <input id="r-file2" type="file" accept=".pdf,.txt,application/pdf,text/plain">
-      <div class="row" style="margin-top:10px"><button class="btn ghost" id="r-copytext" hidden>คัดลอกข้อความทั้งหมด</button></div>
-      <div class="extract" id="r-extract" hidden></div>
-    </div>
-
     <div class="panel">
       <h3>ข้อมูลส่วนตัว</h3>
       <div class="f2">
@@ -2369,60 +2359,6 @@ body{padding-bottom:calc(var(--lane) + env(safe-area-inset-bottom,0px))}
     try{navigator.clipboard.writeText(text).then(function(){done(true);},function(){done(false);});}catch(e){done(false);}
   }
   $('copy-draft').onclick=function(){copyTo(this,draftText(),'คัดลอกเป็นข้อความ');};
-
-  /* ดึงข้อความจากไฟล์ที่แนบ */
-  var pdfLoading=null;
-  function loadPdfJs(){
-    if(window.pdfjsLib)return Promise.resolve(window.pdfjsLib);
-    if(pdfLoading)return pdfLoading;
-    pdfLoading=new Promise(function(res,rej){
-      var s=document.createElement('script');
-      s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-      s.onload=function(){
-        try{ window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; }catch(e){}
-        res(window.pdfjsLib);
-      };
-      s.onerror=function(){rej(new Error('load fail'));};
-      document.head.appendChild(s);
-    });
-    return pdfLoading;
-  }
-  function showExtract(text){
-    var box=$('r-extract');
-    box.textContent=text; box.hidden=false;
-    $('r-copytext').hidden=false;
-    $('r-copytext').onclick=function(){copyTo(this,text,'คัดลอกข้อความทั้งหมด');};
-  }
-  $('r-file2').onchange=function(){
-    var f=this.files&&this.files[0]; if(!f)return;
-    if(/\.txt$/i.test(f.name)||f.type==='text/plain'){
-      var fr=new FileReader();
-      fr.onload=function(){showExtract(String(fr.result));};
-      fr.readAsText(f); return;
-    }
-    showExtract('กำลังอ่านไฟล์…');
-    loadPdfJs().then(function(lib){
-      return f.arrayBuffer().then(function(buf){
-        return lib.getDocument({data:buf}).promise;
-      });
-    }).then(function(doc){
-      var jobs=[];
-      for(var i=1;i<=doc.numPages;i++){
-        jobs.push(doc.getPage(i).then(function(pg){
-          return pg.getTextContent().then(function(tc){
-            return tc.items.map(function(it){return it.str;}).join(' ');
-          });
-        }));
-      }
-      return Promise.all(jobs);
-    }).then(function(pages){
-      var txt=pages.join('\n\n').replace(/[ \t]{2,}/g,' ').trim();
-      showExtract(txt||'ไฟล์นี้ไม่มีข้อความให้ดึง อาจเป็น PDF ที่สร้างจากรูปภาพ ต้องพิมพ์เอง');
-      toast(DOC_SVG,'ดึงข้อความเรียบร้อย','คัดลอกไปวางในช่องด้านล่างได้เลย');
-    }).catch(function(){
-      showExtract('อ่านไฟล์นี้ไม่สำเร็จ ลองเปิด PDF แล้วคัดลอกข้อความมาวางเองได้');
-    });
-  };
 
   /* ---- Backup ---- */
   $('copy').onclick=function(){copyTo(this,JSON.stringify(db),'คัดลอกข้อมูลทั้งหมด');};
