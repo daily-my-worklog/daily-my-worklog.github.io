@@ -406,6 +406,21 @@ body[data-view="book"]{--bg:var(--bg-book)}
 .stickers{display:flex;justify-content:center;gap:16px;align-items:flex-end;margin-top:18px;opacity:.85}
 .stickers svg{flex:none}
 
+/* แผงอิโมจิ */
+.emo-row{display:flex;justify-content:flex-end;margin-top:5px}
+.emo-btn{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-body);font-size:12px;color:var(--ink-soft);
+  background:transparent;border:1.5px solid var(--line);border-radius:99px;padding:2px 11px;cursor:pointer}
+.emo-btn:hover{border-color:var(--primary);color:var(--primary-deep)}
+.emo-btn[aria-expanded="true"]{border-color:var(--primary);color:var(--primary-deep);background:var(--primary-soft)}
+.emo-pick{margin-top:8px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);padding:10px 10px 8px}
+.emo-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.emo-lab{font-size:11.5px;color:var(--ink-soft);margin:2px 2px 3px}
+.emo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:2px;max-height:172px;overflow-y:auto}
+.emo-grid.recent{max-height:none;margin-bottom:6px;padding-bottom:6px;border-bottom:1.5px dashed var(--line)}
+.emo-grid button{font-size:22px;line-height:1;height:38px;border:none;background:none;border-radius:9px;cursor:pointer;padding:0;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.emo-grid button:hover{background:var(--primary-soft)}
+
 /* เรซูเม่ */
 .rmode{display:flex;gap:6px;margin-bottom:16px}
 .rmode button{font-family:var(--font-round);font-weight:600;font-size:14px;border:1.5px solid var(--line);
@@ -1491,6 +1506,7 @@ body{padding-bottom:calc(var(--lane) + env(safe-area-inset-bottom,0px))}
       if(b.dataset.go===name)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
     });
     document.body.setAttribute('data-view',name);
+    if(typeof closeEmo==='function'&&emoBox)closeEmo();
     try{if(location.hash.slice(1)!==name)history.replaceState(null,'','#'+name);}catch(e){}
     window.scrollTo(0,0);
     if(name==='home'){renderCal();renderNudge();}
@@ -2275,7 +2291,7 @@ body{padding-bottom:calc(var(--lane) + env(safe-area-inset-bottom,0px))}
         it.appendChild(top);
         var ul=el('ul');
         byM[m].forEach(function(e){
-          var li=el('li',null,e.title+(e.result?(' — '+e.result):''));
+          var li=el('li',null,noEmoji(e.title)+(noEmoji(e.result)?(' — '+noEmoji(e.result)):''));
           ul.appendChild(li);
         });
         it.appendChild(ul); s.appendChild(it);
@@ -2339,7 +2355,7 @@ body{padding-bottom:calc(var(--lane) + env(safe-area-inset-bottom,0px))}
       Object.keys(byM).sort().reverse().forEach(function(m){
         var d=new Date(+m.slice(0,4),+m.slice(5,7)-1,1);
         out.push(TH_M[d.getMonth()]+' '+(d.getFullYear()+543));
-        byM[m].forEach(function(e){out.push('• '+e.title+(e.result?(' — '+e.result):''));});
+        byM[m].forEach(function(e){out.push('• '+noEmoji(e.title)+(noEmoji(e.result)?(' — '+noEmoji(e.result)):''));});
       });
     }
     if(p.edu.length){
@@ -2359,6 +2375,88 @@ body{padding-bottom:calc(var(--lane) + env(safe-area-inset-bottom,0px))}
     try{navigator.clipboard.writeText(text).then(function(){done(true);},function(){done(false);});}catch(e){done(false);}
   }
   $('copy-draft').onclick=function(){copyTo(this,draftText(),'คัดลอกเป็นข้อความ');};
+
+  /* ---- แผงอิโมจิ ---- */
+  function noEmoji(s){
+    if(!s)return '';
+    var out;
+    try{ out=s.replace(new RegExp('[\\p{Extended_Pictographic}\\uFE0F\\u200D]','gu'),''); }
+    catch(e){ out=s.replace(/[←-⇿⌀-➿⬀-⯿️‍]|[\uD83C-\uD83E][\uDC00-\uDFFF]/g,''); }
+    return out.replace(/\s{2,}/g,' ').trim();
+  }
+  var EKEY='mylog.emo';
+  var EMO=[
+    ['หน้าและอารมณ์','😀 😄 😁 😊 🙂 😉 😍 🥰 😘 😎 🤩 🥳 😌 😴 🤔 😅 😂 🤣 🥲 😢 😭 😤 😡 😱 😳 🥺 😬 🙄 🤯 🫠 🤗 😇'],
+    ['หัวใจและสัญลักษณ์','❤️ 🧡 💛 💚 💙 💜 🤍 🖤 💖 💗 💕 ✨ ⭐ 🌟 🔥 💯 ✅ ❌ ⚠️ ❗ ❓ 💡 🎉 🎊 🏆 🥇 👍 👏 🙏 💪 👌 ✌️'],
+    ['งานและออฟฟิศ','💼 📁 📂 📊 📈 📉 📋 📌 📎 📝 ✏️ 🖊️ 📅 📆 ⏰ ⏳ 💻 🖥️ ⌨️ 🖨️ 📞 📧 📨 💰 💵 💳 🧾 🏦 🧮 📚 🔍 🎯'],
+    ['อาหาร','☕ 🍵 🧋 🥤 🍚 🍜 🍝 🍲 🍛 🍣 🍱 🥗 🍔 🍟 🍕 🥪 🍳 🥐 🍞 🍰 🧁 🍩 🍪 🍫 🍦 🍎 🍌 🍓 🍉 🍇 🥭 🍍'],
+    ['สัตว์และธรรมชาติ','🐱 🐈 😺 😸 😻 🐶 🐰 🐻 🐼 🐥 🦋 🐝 🌱 🌿 🍀 🌷 🌸 🌻 🌼 🌈 ☀️ 🌤️ ⛅ 🌧️ ⛈️ 🌙 🌊 🍂 ❄️ 🌵 🪴 🐾']
+  ].map(function(g){return [g[0],g[1].split(' ')];});
+  var emoRecent=[]; try{emoRecent=JSON.parse(localStorage.getItem(EKEY)||'[]')||[];}catch(e){emoRecent=[];}
+  var emoTarget=null, emoBtnOn=null, emoTab=0;
+  var emoBox=document.createElement('div'); emoBox.className='emo-pick'; emoBox.hidden=true;
+  function emoGrid(list,cls){
+    var g=document.createElement('div'); g.className='emo-grid'+(cls?(' '+cls):'');
+    list.forEach(function(ch){
+      var b=document.createElement('button'); b.type='button'; b.textContent=ch;
+      b.setAttribute('aria-label','แทรก '+ch);
+      b.onclick=function(){insertEmo(ch);};
+      g.appendChild(b);
+    });
+    return g;
+  }
+  function renderEmo(){
+    emoBox.textContent='';
+    if(emoRecent.length){
+      var l=document.createElement('div'); l.className='emo-lab'; l.textContent='ใช้บ่อย'; emoBox.appendChild(l);
+      emoBox.appendChild(emoGrid(emoRecent,'recent'));
+    }
+    var tabs=document.createElement('div'); tabs.className='emo-tabs';
+    EMO.forEach(function(g,i){
+      var b=document.createElement('button'); b.type='button'; b.className='fchip'; b.textContent=g[0];
+      b.setAttribute('aria-pressed',i===emoTab?'true':'false');
+      b.onclick=function(){emoTab=i;renderEmo();};
+      tabs.appendChild(b);
+    });
+    emoBox.appendChild(tabs);
+    emoBox.appendChild(emoGrid(EMO[emoTab][1]));
+  }
+  function insertEmo(ch){
+    var f=emoTarget; if(!f)return;
+    var sel=f._sel||[f.value.length,f.value.length];
+    var s=Math.min(sel[0],f.value.length), e=Math.min(sel[1],f.value.length);
+    try{ f.setRangeText(ch,s,e,'end'); }catch(err){ f.value=f.value.slice(0,s)+ch+f.value.slice(e); }
+    var pos=s+ch.length; f._sel=[pos,pos];
+    f.dispatchEvent(new Event('input',{bubbles:true}));
+    emoRecent=[ch].concat(emoRecent.filter(function(x){return x!==ch;})).slice(0,16);
+    try{localStorage.setItem(EKEY,JSON.stringify(emoRecent));}catch(err){}
+    renderEmo();
+  }
+  function closeEmo(){
+    emoBox.hidden=true;
+    if(emoBtnOn){emoBtnOn.setAttribute('aria-expanded','false');emoBtnOn=null;}
+    emoTarget=null;
+  }
+  function attachEmo(id){
+    var f=$(id); if(!f)return;
+    function remember(){ try{f._sel=[f.selectionStart,f.selectionEnd];}catch(e){} }
+    ['keyup','click','select','blur'].forEach(function(ev){f.addEventListener(ev,remember);});
+    var row=document.createElement('div'); row.className='emo-row';
+    var b=document.createElement('button'); b.type='button'; b.className='emo-btn';
+    b.setAttribute('aria-label','แทรกอิโมจิ'); b.setAttribute('aria-expanded','false');
+    b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M8.5 14.5 q3.5 3.4 7 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="10" r="1.2" fill="currentColor"/><circle cx="15" cy="10" r="1.2" fill="currentColor"/></svg>อิโมจิ';
+    b.onclick=function(){
+      if(emoTarget===f&&!emoBox.hidden){closeEmo();return;}
+      closeEmo();
+      emoTarget=f; emoBtnOn=b; b.setAttribute('aria-expanded','true');
+      row.parentNode.insertBefore(emoBox,row.nextSibling);
+      renderEmo(); emoBox.hidden=false;
+    };
+    row.appendChild(b);
+    f.parentNode.insertBefore(row,f.nextSibling);
+  }
+  ['f-title','f-detail','f-result','n-text','i-text','b-title','b-body','g-title','g-steps'].forEach(attachEmo);
+  document.addEventListener('submit',closeEmo,true);
 
   /* ---- Backup ---- */
   $('copy').onclick=function(){copyTo(this,JSON.stringify(db),'คัดลอกข้อมูลทั้งหมด');};
